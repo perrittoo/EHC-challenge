@@ -67,7 +67,7 @@
             <form id="loginForm" method="POST">
                 <h2>Login</h2>
                 <label for="loginUsername">Username</label>
-                <input type="text" id="loginUsername" name="loginUsername" required>
+                <input type="text" id="loginUsername" name="loginUsername">
                 <label for="loginPassword">Password</label>
                 <input type="password" id="loginPassword" name="loginPassword" required>
                 <button type="submit">Login</button>
@@ -115,16 +115,20 @@
         if (isset($_POST['loginUsername'], $_POST['loginPassword'])) {
             $username = $_POST['loginUsername'];
             $password = $_POST['loginPassword'];
-            $query = "SELECT * from credentials.users WHERE username=\"$username\" and password=\"$password\"";
+            if (strlen(trim($username)) > 0 && strlen(trim($password))) {
+                $query = "SELECT * from credentials.users WHERE username=\"$username\" and password=\"$password\"";
 
-            $res = mysqli_query($conn, $query);
-            if(mysqli_num_rows($res) > 0) {
-                while ($row = mysqli_fetch_array($res)) {
-                    echo "Welcome back my master, ".$row["username"].'<br>';
+                $res = mysqli_query($conn, $query);
+                if(mysqli_num_rows($res) > 0) {
+                    while ($row = mysqli_fetch_array($res)) {
+                        echo "Welcome back my master, ".$row["username"].'<br>';
+                    }
+
+                } else {
+                    echo "Wrong username or password.<br>";
                 }
-
             } else {
-                echo "Wrong username or password.<br>";
+                echo "Don't try to fool me, you need to enter something!";
             }
 
             
@@ -141,34 +145,38 @@
             $username = $_POST["signupUsername"];
             $password = $_POST["signupPassword"];
             $email = $_POST["signupEmail"];
-            $queryUser = "SELECT * from credentials.users WHERE username=\"$username\"";
-            $resUser = mysqli_query($conn, $queryUser);
+            if (strlen(trim($username)) > 0 && strlen(trim($password)) > 0 && strlen(trim($email)) > 0) {
+                $queryUser = "SELECT * from credentials.users WHERE username=\"$username\"";
+                $resUser = mysqli_query($conn, $queryUser);
 
-            $queryEmail = "SELECT * from credentials.users WHERE email=\"$email\"";
-            $resEmail = mysqli_query($conn, $queryEmail);
+                $queryEmail = "SELECT * from credentials.users WHERE email=\"$email\"";
+                $resEmail = mysqli_query($conn, $queryEmail);
 
-            //troll =))
-            $queryPass = "SELECT * from credentials.users WHERE password=\"$password\"";
-            $resPass = mysqli_query($conn, $queryPass);
+                //troll =))
+                $queryPass = "SELECT * from credentials.users WHERE password=\"$password\"";
+                $resPass = mysqli_query($conn, $queryPass);
 
-            if (mysqli_num_rows($resUser) > 0) {
-                echo "This user exists.<br>";
-            } else if (mysqli_num_rows($resPass) > 0) {
-                while ($row = mysqli_fetch_array($resPass)) {
-                    echo "This password was used by ".$row["username"].'<br>';
+                if (mysqli_num_rows($resUser) > 0) {
+                    echo "This user exists.<br>";
+                } else if (mysqli_num_rows($resPass) > 0) {
+                    while ($row = mysqli_fetch_array($resPass)) {
+                        echo "The password ".$password ." was used by ".$row["username"].'<br>';
+                    }
+                } else if (!checkPassword($password)) {
+                    echo "Password is not strong enough or contains some blacklist characters.<br>";
+                } else if (mysqli_num_rows($resEmail) > 0) {
+                    echo "This email exists.<br>";
+                } else {
+                    $queryId = "SELECT personId FROM credentials.users";
+                    $resId = mysqli_query($conn, $queryId);
+                    $id = mysqli_num_rows($resId) + 1;
+
+                    $queryUpdate = "INSERT INTO credentials.users (personId , username, password, email) VALUES ($id, '$username' , '$password', '$email');";
+                    $resUpdate = mysqli_query($conn, $queryUpdate);
+                    echo "Create user succesfully!<br>";
                 }
-            } else if (!checkPassword($password)) {
-                echo "Password is not strong enough.<br>";
-            } else if (mysqli_num_rows($resEmail) > 0) {
-                echo "This email exists.<br>";
             } else {
-                $queryId = "SELECT personId FROM credentials.users";
-                $resId = mysqli_query($conn, $queryId);
-                $id = mysqli_num_rows($resId) + 1;
-
-                $queryUpdate = "INSERT INTO credentials.users (personId , username, password, email) VALUES ($id, '$username' , '$password', '$email');";
-                $resUpdate = mysqli_query($conn, $queryUpdate);
-                echo "Create user succesfully!<br>";
+                echo "Don't try to fool me, you need to enter something!";
             }
         }
 
