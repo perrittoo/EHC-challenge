@@ -20,16 +20,20 @@
     if (isset($_POST["username"], $_POST["password"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
-        $query = "SELECT * FROM credentials.users WHERE username=\"$username\" and password=\"$password\"";
-        $res = mysqli_query($conn, $query);
-        if (mysqli_num_rows($res) > 0) {
-            $mess =  "Login succesfully!<br>";
-            if (isset($_POST['remember'])) {
-                setcookie("user" , $username , time() + 86400 * 7);
-                $messCookie = "Your login session has been remembered for 7 days!<br>";
+        if (strlen(trim($username)) > 0 && strlen(trim($password)) > 0) {
+            $query = "SELECT * FROM credentials.users WHERE username=\"$username\" and password=\"$password\"";
+            $res = mysqli_query($conn, $query);
+            if (mysqli_num_rows($res) > 0) {
+                $mess =  "Login succesfully!<br>";
+                if (isset($_POST['remember'])) {
+                    setcookie("user" , $username , time() + 86400 * 7);
+                    $messCookie = "Your login session has been remembered for 7 days!<br>";
+                }
+            } else {
+                $mess = "Username or password wrongs!";
             }
         } else {
-            $mess = "Username or password wrongs!";
+            $mess = "Don't try to fool me, you need to enter something!";
         }
 
         
