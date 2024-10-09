@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Registration </title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <h2>Register Form</h2>
+
+        <form action="../controller/register.php" method="POST" id="create">
+            <div class="input-box">
+                <input type="text" placeholder="Enter your username" id="username" name="username" required>
+            </div>
+
+            <div class="input-box">
+                <input type="text" placeholder="Enter your fullname" id="fullname" name="fullname" required>
+            </div>
+
+            <div class="input-box">
+                <input type="email" placeholder="Enter your email" id="email" name="email" required>
+            </div>
+
+            <div class="input-box">
+                <input type="text" placeholder="Enter your mobile number" id="mobile" name="mobile" required>
+            </div>
+
+            <div class="input-box">
+                <input type="password" placeholder="Enter your password" id="password" name="password" required>
+            </div>
+
+            <div class="input-box">
+                <input type="password" placeholder="Confirm your password" id="confirm-password" name="comfirm-password" required>
+            </div>
+
+            <div class="role">
+                <input type="radio" id="student" name="role" value="student" required>
+                <h3>Student</h3>
+
+                <input type="radio" id="teacher" name="role" value="teacher" required>
+                <h3>Teacher</h3>
+            </div>
+            
+            <div class="input-box button">
+                <input type="Submit" value="Register Now">
+            </div>
+            <div class="text">
+                <h3>Already have an account? <a href="login.html">Login now</a></h3>
+            </div>
+        </form>
+            
+        
+    </div>
+
+</body>
+</html>
